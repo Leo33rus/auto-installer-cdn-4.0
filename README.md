@@ -1,4 +1,4 @@
-# 🚀 auto-installer-cdn-4.0
+# 🚀 Auto-installer-cdn-4.0
 
 <p align="center">
   <img src="https://img.shields.io/badge/Version-v4.0-blue" alt="Version v4.0" />
