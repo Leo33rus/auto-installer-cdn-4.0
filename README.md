@@ -1,4 +1,5 @@
-<img width="1214" height="1295" alt="cdn-installer-4 0_ logo" src="https://github.com/user-attachments/assets/c934df20-7ddc-49e2-9908-76d585f43513" />
+<img width="1280" height="640" alt="5626" src="https://github.com/user-attachments/assets/bbcfbc41-16c4-4220-b951-083ccfefe4f5" />
+
 <div align="center">
 
 # 🚀 Auto-installer-cdn-4.0
