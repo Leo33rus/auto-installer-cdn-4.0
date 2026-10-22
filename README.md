@@ -58,7 +58,7 @@ VPN CDN Installer автоматизирует подготовку сервер
 Выполните на сервере от имени root:
 
 ```bash
-wget -O installer.py https://raw.githubusercontent.com/Leo33rus/auto-installer-cdn-4.0/main/installer.py && python3 installer.py
+wget -O auto-installer-cdn-4.0.py https://raw.githubusercontent.com/Leo33rus/auto-installer-cdn-4.0/main/auto-installer-cdn-4.0.py && python3 auto-installer-cdn-4.0.py
 ```
 
 После запуска установщик предлагает выбрать режим, панель и CDN-провайдера.
