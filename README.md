@@ -1,262 +1,196 @@
+<div align="center">
+  <img src="https://img.shields.io/badge/Version-v4.0-0ea5e9?style=for-the-badge&logo=github&logoColor=white" alt="Version v4.0" />
+  <img src="https://img.shields.io/badge/Status-Stable-22c55e?style=for-the-badge" alt="Status" />
+  <img src="https://img.shields.io/badge/Platform-Linux%20%7C%20Ubuntu%20%7C%20Debian-38bdf8?style=for-the-badge" alt="Platform" />
+  <img src="https://img.shields.io/badge/License-Private-red?style=for-the-badge" alt="License" />
+</div>
 
-# 🚀 Auto-installer-cdn-4.0
+<h1 align="center" style="font-size:52px; letter-spacing:1px; color:#00d9ff; text-shadow:0 0 18px rgba(0,217,255,0.9);">
+  <span style="display:inline-block; vertical-align:middle;">🛡️</span>
+  cdn-installer-4.0
+</h1>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Version-v4.0-blue" alt="Version v4.0" />
-  <img src="https://img.shields.io/badge/OS-Ubuntu%2022.04%20%7C%2024.04-lightgrey" alt="Ubuntu 22.04 | 24.04" />
-  <img src="https://img.shields.io/badge/Panel-Remnawave%20%7C%203x-ui-blueviolet" alt="Remnawave | 3x-ui" />
-  <img src="https://img.shields.io/badge/CDN-VK%20Cloud%20%7C%20Yandex%20Cloud%20%7C%20TurboFlare-orange" alt="CDN providers" />
+<p align="center" style="font-size:22px; color:#dffbff; margin-top:-8px;">
+  <b>Автоматизированный установщик VPN/CDN с защитой и привязкой к лицензии</b>
 </p>
 
-Автоматическое развёртывание VLESS XHTTP Packet-Up через CDN.
-
-Remnawave · 3x-ui · VK Cloud · Yandex Cloud · TurboFlare · Beeline CDNvideo · Timeweb CDN · Selectel CDN
-
-VPN CDN Installer автоматизирует подготовку сервера и развёртывание инфраструктуры для передачи VLESS-трафика через CDN.
-
-## ✨ Возможности
-
-VPN CDN Installer собирает конфигурацию под выбранную архитектуру и провайдера. Установщик позволяет быстро подготовить сервер и запустить рабочую инфраструктуру для доступа по VLESS XHTTP Packet-Up.
-
-### Что умеет установщик
-
-- Панель управления: Remnawave или 3x-ui.
-- Xray Core: VLESS inbound с транспортом XHTTP Packet-Up.
-- Веб-серверы: Nginx и Caddy — там, где это предусмотрено схемой.
-- TLS: сертификаты для используемых доменов.
-- CDN: отдельный профиль конфигурации для выбранного провайдера.
-- Сеть: параметры Linux, BBR и настройки TCP.
-- Firewall: правила сетевого доступа, необходимые выбранной схеме.
-- Маршрутизация: geo-файлы и правила Xray.
-- Подписки: ссылки и конфигурации для клиентских приложений, если поддерживается выбранной панелью.
-- Веб-заглушка: обработка обычных HTTP-запросов.
-- Проверка установки: диагностика служб, портов, Nginx, health endpoint и доступности панели.
-- Подготовка окружения: Docker и Docker Compose, где это требуется выбранной панелью.
-
-Конкретный набор действий зависит от режима установки, существующей конфигурации сервера и возможностей панели.
-
----
-
-## 🏗️ Как работает схема
-
-### Стандартная схема
-
-```text
-Клиент
-  │
-  ▼
-CDN-провайдер
-  │
-  ▼
-Nginx / Caddy (origin)
-  │
-  ▼
-Xray (VLESS XHTTP Packet-Up)
-  │
-  ▼
-Интернет
-```
-
-Клиент подключается к CDN-домену. CDN пересылает запросы на origin, где веб-сервер направляет их к Xray. После этого трафик проходит в интернет.
-
-### Каскадная схема
-
-```text
-Клиент
-  │
-  ▼
-CDN-провайдер
-  │
-  ▼
-Relay-нода
-  │
-  ▼
-Exit-нода
-  │
-  ▼
-Интернет
-```
-
-Каскад добавляет промежуточный relay-сервер. Такой режим подходит для более сложных архитектур и зависит от доступной инфраструктуры.
-
----
-
-## ⚙️ Режимы установки
-
-### 1. Панель и нода на одном сервере
-
-Панель управления, Xray, CDN origin и компоненты подписок размещаются на одном VPS.
-
-Подходит для:
-- первого запуска;
-- компактной инфраструктуры;
-- быстрого развёртывания в тестовом окружении.
-
-### 2. Панель и удалённая нода
-
-Панель остаётся на основном сервере, а origin и Xray-нода разворачиваются на отдельном VPS.
-
-Подходит для:
-- нескольких локаций;
-- разделения управления и пользовательского трафика;
-- более гибкой архитектуры.
-
-### 3. CDN для существующей панели
-
-Установщик добавляет CDN inbound и необходимые веб-конфигурации к существующей инфраструктуре.
-
-> Перед внесением изменений в работающую систему обязательно сделайте резервную копию конфигураций и данных.
-
----
-
-## 🖥️ Поддерживаемые панели
-
-| Панель | Способ развёртывания | Что настраивается |
-| --- | --- | --- |
-| Remnawave | Docker Compose | Backend, нода, домены, сертификаты, подписки и подключение CDN inbound |
-| 3x-ui 3.7.0 | Нативная служба | Панель, база SQLite, Xray inbound, web base path, сертификаты и подписки |
-
-Дополнительные варианты Hysteria2 и gRPC доступны только там, где они совместимы с выбранной архитектурой.
-
----
-
-## 🌐 Поддерживаемые CDN
-
-### VK Cloud
-- Origin работает по HTTP.
-- Поддерживаются обычная и каскадная схемы.
-- Установщик создаёт XHTTP inbound и конфигурацию Nginx.
-- Подходит для пользователей с готовым аккаунтом VK Cloud CDN.
-
-### Yandex Cloud
-- Поддерживается HTTPS-соединение до origin.
-- Настраиваются домен источника и TLS.
-- Возможна работа через отдельную ноду.
-- TLS позволяет шифровать участок CDN → origin.
-
-### TurboFlare CDN
-- Origin работает по HTTPS на порту 443.
-- Используется отдельный XHTTP-путь.
-- Важна делегированная DNS-зона и управление edge-сертификатом.
-- Предусмотрен отдельный режим для переноса существующего домена и проверки делегирования NS.
-
-### Beeline CDNvideo
-- Используется домен, выданный CDNvideo.
-- Поддерживаются сценарии Remnawave и 3x-ui.
-- Установщик выводит параметры, которые должны быть перенесены в личный кабинет CDNvideo.
-
-### Timeweb CDN
-- Origin задаётся IP-адресом сервера на порту 80.
-- HTTPS до origin отключается.
-- Есть технический домен вида `xxxx.cdn.twcstorage.ru`.
-- Пользовательский CDN-домен направляется через CNAME.
-
-### Selectel CDN
-- Создаётся ресурс типа «Статика» с HTTPS origin на порту 443.
-- Есть технический домен вида `xxxx.selcdn.net`.
-- Увеличиваются таймауты для длительных XHTTP-потоков.
-- Отключаются cache/brotli/gzip и дополнительные оптимизации.
-
----
-
-## 📊 Сравнение CDN
-
-| Провайдер | Соединение до origin | Источник | Особенности |
-| --- | --- | --- | --- |
-| VK Cloud | HTTP | Домен origin | Поддержка каскадной схемы |
-| Yandex Cloud | HTTPS | Домен origin | TLS между CDN и сервером |
-| TurboFlare CDN | HTTPS :443 | Домен с делегированием NS | Управление DNS-зоной и edge-сертификатом |
-| Beeline CDNvideo | HTTP/HTTPS | Домен, выданный CDNvideo | Отдельный профиль провайдера |
-| Timeweb CDN | HTTP :80 | IP-адрес сервера | Технический домен и CNAME |
-| Selectel CDN | HTTPS :443 | Домен origin | Технический домен *.selcdn.net, таймауты и методы DELETE/POST |
-
-Выбор зависит от доступных функций CDN, требований к соединению с origin и архитектуры вашей инфраструктуры.
-
-## ✅ Результат установки
-
-После успешного завершения установщик выводит:
-
-- адрес панели управления;
-- учётные данные администратора и путь панели, если он используется;
-- origin-домен и CDN-домен;
-- параметры VLESS XHTTP inbound;
-- ссылку подписки и JSON-конфигурацию, если их поддерживает панель;
-- инструкцию по настройке выбранного CDN;
-- результаты итоговой проверки компонентов.
-
-Некоторые параметры CDN необходимо вручную перенести в личный кабинет провайдера.
-
----
-
-## 🧰 Системные требования
-
-- Операционная система: Ubuntu 22.04 или Ubuntu 24.04
-- Доступ: root
-- Процессор: от 1 CPU
-- Оперативная память: от 1 GB RAM
-- Домен: доступ к управлению DNS-записями
-- CDN-ресурс: аккаунт одного из поддерживаемых провайдеров
-- Удалённая нода: второй VPS и SSH-доступ
-- Каскад: дополнительный relay-сервер
-
-Фактические требования зависят от панели, числа подключений и нагрузки.
-
----
-
-## 🔐 Безопасность и важные замечания
-
-- Запускайте установщик только на серверах, которыми вы управляете и на которых имеете право выполнять системные изменения.
-- Перед установкой на рабочий сервер создайте резервную копию или снимок VPS.
-- Установщик может устанавливать системные компоненты, изменять сетевые настройки, firewall и конфигурации веб-серверов.
-- Проверьте правила firewall и доступность SSH до и после установки, чтобы не потерять доступ к серверу.
-- Не публикуйте в репозитории пароли, токены, приватные ключи, ссылки подписок и другие секреты.
-- Перед сменой NS-серверов сохраните текущую DNS-зону и перенесите необходимые записи.
-- После установки проверьте состояние служб, сертификатов, inbound и доступность панели.
-- Возможности CDN и условия предоставления услуг определяются соответствующим провайдером.
-
----
-
-## 📝 История изменений
-
-### v4.0
-- Обновлён сценарий установки 3x-ui 3.7.0.
-- Актуализированы сценарии Remnawave.
-- Добавлены отдельные пошаговые инструкции для Timeweb, TurboFlare и Selectel CDN.
-- Улучшены XHTTP Packet-Up профили провайдеров.
-- Поддержаны установка на одном сервере, удалённая нода и работа с существующей панелью.
-- Добавлена автоматическая настройка подписок для Remnawave и 3x-ui.
-- Улучшены проверки Xray-порта, Nginx, health endpoint и доступности панели.
-- Повышена устойчивость скачивания компонентов при медленном соединении.
-- Улучшены повторный запуск, диагностика и сообщения об ошибках.
-
----
-
-## 💬 Поддержка
-
-По вопросам установки и диагностики:
-
-- Telegram: `@cyberlock_support`
-
-При обращении укажите:
-- версию установщика;
-- ОС;
-- выбранную панель;
-- CDN-провайдера;
-- текст ошибки.
-
-Перед отправкой запроса подготовьте вывод команды и логи диагностики.
-
----
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Project-Status%20Stable-success" alt="Status Stable" />
-  <img src="https://img.shields.io/badge/Verified-Used%20by%20thousands-success" alt="Verified by thousands" />
+<div align="center" style="margin:24px 0 28px 0;">
+  <img src="https://img.shields.io/badge/Безопасность-✅-00d4ff?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Linux-✅-00d4ff?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/X-Ray-✅-00d4ff?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Remnawave-✅-00d4ff?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/IP%20%2F%20HWID-✅-00d4ff?style=for-the-badge" />
+</div>
+
+<div style="
+  background: linear-gradient(135deg, rgba(8,20,36,0.9), rgba(9,35,66,0.9));
+  border: 1px solid rgba(0,212,255,0.8);
+  border-radius: 22px;
+  padding: 28px;
+  box-shadow: 0 0 30px rgba(0,212,255,0.25), inset 0 0 25px rgba(0,212,255,0.08);
+  margin: 20px 0;
+">
+
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr>
+      <td valign="top" width="52%">
+        <h2 style="margin: 0 0 18px 0; color: #00d6ff; font-size: 30px;">🚀 О проекте</h2>
+        <p style="color:#dfeeff; font-size:17px; line-height:1.7;">
+          <b>cdn-installer-4.0</b> — это современный и защищённый установщик, который автоматически разворачивает и настраивает VPN/CDN для вашего сервера. Проект объединяет надёжную авторизацию, привязку к лицензии, поддержку популярных сервисов и удобное управление конфигурацией.
+        </p>
+
+        <div style="margin-top:18px;">
+          <p style="margin:8px 0; color:#bfeeff;"><span style="color:#00ffbf;">✓</span> Автоматическая установка и настройка</p>
+          <p style="margin:8px 0; color:#bfeeff;"><span style="color:#00ffbf;">✓</span> Защита от несанкционированного доступа</p>
+          <p style="margin:8px 0; color:#bfeeff;"><span style="color:#00ffbf;">✓</span> Поддержка X-Ray и Remnawave</p>
+          <p style="margin:8px 0; color:#bfeeff;"><span style="color:#00ffbf;">✓</span> Привязка к HWID и IP-адресу</p>
+          <p style="margin:8px 0; color:#bfeeff;"><span style="color:#00ffbf;">✓</span> Простая настройка и управление</p>
+        </div>
+
+        <div style="
+          margin-top:22px;
+          border: 1px solid rgba(0,212,255,0.7);
+          background: rgba(0,212,255,0.06);
+          border-radius: 12px;
+          padding: 16px 18px;
+          color:#d9f8ff;
+          font-size:15px;
+          line-height:1.6;
+        ">
+          <strong style="color:#7be7ff;">ℹ️ Важно:</strong>
+          Проект предназначен для легального использования. Работа выполняется только при наличии действующей лицензии.
+        </div>
+      </td>
+
+      <td valign="top" width="48%" style="padding-left: 26px;">
+        <h2 style="margin: 0 0 18px 0; color: #00d6ff; font-size: 30px;">⚡ Быстрый старт</h2>
+
+        <div style="
+          background: rgba(7,22,43,0.9);
+          border: 1px solid rgba(0,212,255,0.8);
+          border-radius: 16px;
+          padding: 18px;
+          box-shadow: inset 0 0 18px rgba(0,212,255,0.09);
+        ">
+          <p style="margin:0 0 10px 0; color:#cfefff; font-size:15px;">Запустите установку одной командой:</p>
+          <pre style="
+            margin:0;
+            padding:14px 16px;
+            overflow:auto;
+            border-radius:10px;
+            background:#071827;
+            border:1px solid rgba(0,212,255,0.4);
+            color:#aafaff;
+            font-size:14px;
+            line-height:1.6;
+          "><code>wget -O installer.py https://raw.githubusercontent.com/Leo33rus/cdn-installer-4.0/main/installer.py && python3 installer.py</code></pre>
+        </div>
+
+        <div align="center" style="margin-top:20px;">
+          <img src="https://img.shields.io/badge/Linux-00d4ff?style=for-the-badge&logo=linux&logoColor=white" />
+          <img src="https://img.shields.io/badge/Ubuntu-00d4ff?style=for-the-badge&logo=ubuntu&logoColor=white" />
+          <img src="https://img.shields.io/badge/Debian-00d4ff?style=for-the-badge&logo=debian&logoColor=white" />
+          <img src="https://img.shields.io/badge/Python-00d4ff?style=for-the-badge&logo=python&logoColor=white" />
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div style="
+  background: linear-gradient(135deg, rgba(7,22,43,0.9), rgba(12,38,70,0.9));
+  border: 1px solid rgba(0,212,255,0.8);
+  border-radius: 20px;
+  padding: 28px;
+  box-shadow: 0 0 30px rgba(0,212,255,0.2), inset 0 0 18px rgba(0,212,255,0.06);
+  margin: 26px 0;
+">
+  <h2 style="margin:0 0 22px 0; color:#00d6ff; font-size:30px;">🧭 Схема работы</h2>
+
+  <div align="center">
+    <img src="https://img.shields.io/badge/Пользователь-0ea5e9?style=for-the-badge" />
+    <span style="color:#7be7ff; font-size:26px;">→</span>
+    <img src="https://img.shields.io/badge/Запуск%20установки-38bdf8?style=for-the-badge" />
+    <span style="color:#7be7ff; font-size:26px;">→</span>
+    <img src="https://img.shields.io/badge/Ваш%20сервер-22d3ee?style=for-the-badge" />
+    <span style="color:#7be7ff; font-size:26px;">→</span>
+    <img src="https://img.shields.io/badge/Yandex%20Cloud%20%2F%20CDN-0ea5e9?style=for-the-badge" />
+    <span style="color:#7be7ff; font-size:26px;">→</span>
+    <img src="https://img.shields.io/badge/Клиенты-38bdf8?style=for-the-badge" />
+  </div>
+</div>
+
+<div style="
+  display:flex;
+  gap:18px;
+  flex-wrap:wrap;
+  margin: 28px 0;
+">
+  <div style="
+    flex:1 1 260px;
+    background: rgba(5,18,33,0.9);
+    border: 1px solid rgba(0,212,255,0.7);
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 0 24px rgba(0,212,255,0.14);
+  ">
+    <h3 style="margin:0 0 12px 0; color:#00d6ff;">🧩 Поддерживаемые сервисы</h3>
+    <p style="margin:0; color:#d8f5ff; line-height:1.8;">
+      X-Ray<br>
+      Remnawave<br>
+      Yandex Cloud<br>
+      CDN<br>
+      DNS
+    </p>
+  </div>
+
+  <div style="
+    flex:1 1 260px;
+    background: rgba(5,18,33,0.9);
+    border: 1px solid rgba(0,212,255,0.7);
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 0 24px rgba(0,212,255,0.14);
+  ">
+    <h3 style="margin:0 0 12px 0; color:#00d6ff;">🔗 Полезные ссылки</h3>
+    <p style="margin:0; color:#d8f5ff; line-height:1.8;">
+      <a href="https://github.com/Leo33rus/cdn-installer-4.0/wiki" style="color:#7be7ff; text-decoration:none;">Документация</a><br>
+      <a href="https://t.me/your_support_channel" style="color:#7be7ff; text-decoration:none;">Поддержка в Telegram</a><br>
+      <a href="https://github.com/Leo33rus/cdn-installer-4.0/discussions" style="color:#7be7ff; text-decoration:none;">Вопросы и ответы</a><br>
+      <a href="https://github.com/Leo33rus/cdn-installer-4.0/releases" style="color:#7be7ff; text-decoration:none;">Релизы</a>
+    </p>
+  </div>
+
+  <div style="
+    flex:1 1 260px;
+    background: rgba(5,18,33,0.9);
+    border: 1px solid rgba(0,212,255,0.7);
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 0 24px rgba(0,212,255,0.14);
+  ">
+    <h3 style="margin:0 0 12px 0; color:#00d6ff;">⭐ Статус проекта</h3>
+    <p style="margin:0; color:#d8f5ff; line-height:1.8;">
+      <img src="https://img.shields.io/badge/Status-Stable-brightgreen?style=for-the-badge" /><br><br>
+      Проверено и используется тысячами пользователей.
+    </p>
+  </div>
+</div>
+
+<div align="center" style="margin:36px 0 20px 0;">
+  <p style="font-size:20px; color:#d7f6ff; font-weight:bold; text-shadow:0 0 12px rgba(0,212,255,0.5);">
+    Спасибо, что выбираете наш проект!
+  </p>
+</div>
+
+<div align="center" style="padding-bottom:18px;">
+  <img src="https://img.shields.io/badge/VPN-00d4ff?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/CDN-00d4ff?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/X-Ray-00d4ff?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Remnawave-00d4ff?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/v4.0-00d4ff?style=for-the-badge" />
+</div>
+
+<p align="center" style="color:#a9d7ff; font-size:14px;">
+  GitHub: <a href="https://github.com/Leo33rus/cdn-installer-4.0" style="color:#7be7ff;">github.com/Leo33rus/cdn-installer-4.0</a>
 </p>
-
-<p align="center">
-  <a href="https://github.com/Leo33rus/cdn-installer-4.0">GitHub</a>
-  ·
-  <a href="https://t.me/cyberlock_support">Telegram Support</a>
-</p>
-
-© 2025–2026 cyberlock. Все права защищены.
