@@ -9,10 +9,6 @@
 </div>
 
 <p align="center">
-  <img src="https://github.com/Leo33rus/auto-installer-cdn-4.0/raw/main/logo.png" alt="Project logo" width="180" />
-</p>
-
-<p align="center">
   <strong>Автоматизированный установщик VPN/CDN для Linux</strong>
 </p>
 
