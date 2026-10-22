@@ -1,3 +1,4 @@
+<div align="center">
 
 # 🚀 Auto-installer-cdn-4.0
 
