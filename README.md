@@ -1,4 +1,6 @@
 <div align="center">
+  <img src="assets/banner.svg" alt="cdn-installer-4.0" width="900">
+</div>
 
 # 🚀 Auto-installer-cdn-4.0
 
